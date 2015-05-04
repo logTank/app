@@ -1,11 +1,17 @@
-<md-toolbar layout="row">Hello logTank &lt;3</md-toolbar>
-<div ng-controller="MainController as main" layout="column" style="height:500px;">
-  <section layout="row" flex>
-    <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="leftNavbar" md-is-locked-open="$mdMedia('gt-md')">
-      <md-toolbar class="md-theme-indigo">
-        <h1 class="md-toolbar-tools">Sidenav Left</h1>
+<md-toolbar class="md-accent top-toolbar md-whiteframe-z2" layout="row">
+<img class="top-logo" src="/images/greenLogo.png" alt="logo"/>
+<h3>logTank Dashboard</h3>
+</md-toolbar>
+<div ng-controller="MainController as main" layout="row" flex style="min-height:500px;">
+  
+  <div layout="row" flex>
+    
+<!--    Left side navigation-->
+    <md-sidenav class="md-sidenav-left" md-component-id="leftNavbar" md-is-locked-open="$mdMedia('gt-md')">
+      <md-toolbar>
+        <h1 class="md-toolbar-tools">logTank using company</h1>
       </md-toolbar>
-      <md-content layout-padding ng-controller="LeftNavbarController as leftNavbar">
+      <md-content role="navigation" layout-padding ng-controller="LeftNavbarController as leftNavbar">
         <md-button ng-click="leftNavbar.close()" class="md-primary" hide-gt-md>
           Close Sidenav Left
         </md-button>
@@ -13,9 +19,13 @@
           This sidenav is locked open on your device. To go back to the default behavior,
           narrow your display.
         </p>
+        <md-divider></md-divider>
+        Point
       </md-content>
     </md-sidenav>
-    <md-content flex layout-padding>
+    
+<!--    Main Text-->
+    <md-content class="dashboard-content" flex layout-padding>
       <div layout="column" layout-fill layout-align="top center">
         <p>
         The left sidenav will 'lock open' on a medium (>=960px wide) device.
@@ -38,6 +48,8 @@
       </div>
       <div flex></div>
     </md-content>
+    
+<!--    Right side navigation-->
     <md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="rightNavbar">
       <md-toolbar class="md-theme-light">
         <h1 class="md-toolbar-tools">Sidenav Right</h1>
@@ -55,5 +67,11 @@
         </md-button>
       </md-content>
     </md-sidenav>
-  </section>
+  </div>
 </div>
+
+ <!--    Footer-->
+<md-footer class="md-accent" layout="row">
+  Just add data
+</md-footer>
+

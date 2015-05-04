@@ -4,6 +4,6 @@ angular.module('logtank', ['angular-meteor', 'ngAnimate', 'ngMaterial', 'ui.rout
 	
 angular.module('logtank').config(['$mdThemingProvider', ($mdThemingProvider: angular.material.MDThemingProvider) => {
 	$mdThemingProvider.theme('default')
-		.primaryPalette('pink')
-		.accentPalette('orange');
+		.primaryPalette('lime')
+		.accentPalette('blue-grey', {'default':'500'});
 }]);	
