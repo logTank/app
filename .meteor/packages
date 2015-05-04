@@ -13,3 +13,7 @@ angular:angular-material
 fourseven:scss
 angularui:angular-ui-router
 meteorhacks:cluster
+meteorhacks:npm
+
+
+npm-container
