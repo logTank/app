@@ -10,6 +10,8 @@
 // Reference: http://www.rethinkdb.com/api/#js
 // TODO: Document manipulation and below
 
+// TODO: Aggregation reduce (http://rethinkdb.com/api/javascript/reduce/#) and below
+
 declare module rethinkdb {
   export function connect(host:ConnectionOptions, cb:(err:Error, conn:Connection)=>void);
   export function connect(host:string, cb:(err:Error, conn:Connection)=>void);
@@ -21,7 +23,7 @@ declare module rethinkdb {
   export function dbList():Operation<string[]>;
 
   export function db(name:string):Db;
-  export function table(name:string, options?:{useOutdated:boolean, identifierFormat?:string}):Table;
+  export function table(name:string, options?:{useOutdated:boolean; identifierFormat?:string}):Table;
 
   export function asc(property:string):Sort;
   export function desc(property:string):Sort;
@@ -40,7 +42,18 @@ declare module rethinkdb {
   
   export var minval:any;
   export var maxval:any;
+  export function error():RethinkError;
 
+  export function map(s:Sequence, transform:ExpressionFunction<any>):Sequence;
+  export function map(s:Sequence, s2:Sequence, transform:ExpressionFunction<any>):Sequence;
+  export function map(s:Sequence, s2:Sequence, s3:Sequence, transform:ExpressionFunction<any>):Sequence;
+  export function map(s:Sequence, s2:Sequence, s3:Sequence, s4:Sequence, transform:ExpressionFunction<any>):Sequence;
+  export function map(s:Sequence, s2:Sequence, s3:Sequence, s4:Sequence, s5:Sequence, transform:ExpressionFunction<any>):Sequence;
+  export function map(s:Sequence, s2:Sequence, s3:Sequence, s4:Sequence, s5:Sequence, s6:Sequence, transform:ExpressionFunction<any>):Sequence;
+  export function map(s:Sequence, s2:Sequence, s3:Sequence, s4:Sequence, s5:Sequence, s6:Sequence, s7:Sequence, transform:ExpressionFunction<any>):Sequence;
+  export function map(s:Sequence, s2:Sequence, s3:Sequence, s4:Sequence, s5:Sequence, s6:Sequence, s7:Sequence, s8:Sequence, transform:ExpressionFunction<any>):Sequence;
+  export function map(s:Sequence, s2:Sequence, s3:Sequence, s4:Sequence, s5:Sequence, s6:Sequence, s7:Sequence, s8:Sequence, s9:Sequence, transform:ExpressionFunction<any>):Sequence;
+  
   interface EventEmitter {
     addListener(event:string, listener:Function);
     on(event:string, listener:Function);
@@ -52,14 +65,17 @@ declare module rethinkdb {
     emit(event:string, ...args:any[]);
   }
   
-  interface Cursor extends EventEmitter {
+  interface GroupedCursor extends InternalCursor<GroupedObject> { }
+  
+  interface Cursor extends InternalCursor<any> { }
+  
+  interface InternalCursor<T> extends EventEmitter {
     hasNext():boolean;
-    each(cb:(err:Error, row:any)=>void, done?:()=>void);
-    each(cb:(err:Error, row:any)=>boolean, done?:()=>void); // returning false stops iteration
-    next(cb:(err:Error, row:any) => void);
-    next():Promise<any>;
-    toArray(cb:(err:Error, rows:any[]) => void);
-    toArray():Promise<any[]>;
+    each(cb:(err:Error, row:T)=>void|boolean, done?:()=>void); // returning false stops iteration
+    next(cb:(err:Error, row:T) => void);
+    next():Promise<T>;
+    toArray(cb:(err:Error, rows:T[]) => void);
+    toArray():Promise<T[]>;
     close();
   }
 
@@ -67,11 +83,11 @@ declare module rethinkdb {
     /**
      * @default 'localhost'
      */
-    host:string;
+    host?:string;
     /**
      * @default 28015
      */
-    port:number;
+    port?:number;
     /**
      * @default 'test'
      */
@@ -182,58 +198,101 @@ declare module rethinkdb {
 
     get(key:string):Sequence; // primary key
     getAll(key:string, ...keys:string[]):Sequence; // without index defaults to primary key
-    getAll(key:string, key2:string, index?:Index):Sequence; // without index defaults to primary key
-    getAll(key:string, key2:string, key3:string, index?:Index):Sequence; // without index defaults to primary key
-    getAll(key:string, key2:string, key3:string, key4:string, index?:Index):Sequence; // without index defaults to primary key
-    getAll(key:string, key2:string, key3:string, key4:string, key5:string, index?:Index):Sequence; // without index defaults to primary key
-    getAll(key:string, key2:string, key3:string, key4:string, key5:string, key6:string, index?:Index):Sequence; // without index defaults to primary key
-    getAll(key:string, key2:string, key3:string, key4:string, key5:string, key6:string, key7:string, index?:Index):Sequence; // without index defaults to primary key
-    getAll(key:string, key2:string, key3:string, key4:string, key5:string, key6:string, key7:string, key8:string, index?:Index):Sequence; // without index defaults to primary key
-    getAll(key:string, key2:string, key3:string, key4:string, key5:string, key6:string, key7:string, key8:string, key9:string, index?:Index):Sequence; // without index defaults to primary key
+    getAll(key:string, key2:string, index:Index):Sequence; // without index defaults to primary key
+    getAll(key:string, key2:string, key3:string, index:Index):Sequence; // without index defaults to primary key
+    getAll(key:string, key2:string, key3:string, key4:string, index:Index):Sequence; // without index defaults to primary key
+    getAll(key:string, key2:string, key3:string, key4:string, key5:string, index:Index):Sequence; // without index defaults to primary key
+    getAll(key:string, key2:string, key3:string, key4:string, key5:string, key6:string, index:Index):Sequence; // without index defaults to primary key
+    getAll(key:string, key2:string, key3:string, key4:string, key5:string, key6:string, key7:string, index:Index):Sequence; // without index defaults to primary key
+    getAll(key:string, key2:string, key3:string, key4:string, key5:string, key6:string, key7:string, key8:string, index:Index):Sequence; // without index defaults to primary key
+    getAll(key:string, key2:string, key3:string, key4:string, key5:string, key6:string, key7:string, key8:string, key9:string, index:Index):Sequence; // without index defaults to primary key
 
     between(lowerKey:any, upperKey:any, index?:Index):Sequence;
   }
 
-  interface Sequence extends Operation<Cursor>, Writeable {
+  interface GroupedSequence extends InternalSequence<GroupedSequence, GroupedCursor> {
+    ungroup():Sequence;
+  }
 
-    filter(rql:ExpressionFunction<boolean>,options?:{default:boolean}):Sequence;
-    filter(rql:Expression<boolean>,options?:{default:boolean}):Sequence;
-    filter(obj:{[key:string]:any},options?:{default:boolean}):Sequence;
+  interface Sequence extends InternalSequence<Sequence, Cursor> {
+    group(...aggregators:(string|Aggregator)[]):GroupedSequence;
+    group(agg1:(string|Aggregator)[], index:Index):GroupedSequence;
+    group(agg1:(string|Aggregator)[], agg2:(string|Aggregator)[], index:Index):GroupedSequence;
+    group(agg1:(string|Aggregator)[], agg2:(string|Aggregator)[], agg3:(string|Aggregator)[], index:Index):GroupedSequence;
+    group(agg1:(string|Aggregator)[], agg2:(string|Aggregator)[], agg3:(string|Aggregator)[], agg4:(string|Aggregator)[], index:Index):GroupedSequence;
+    group(agg1:(string|Aggregator)[], agg2:(string|Aggregator)[], agg3:(string|Aggregator)[], 
+          agg4:(string|Aggregator)[], agg5:(string|Aggregator)[], index:Index):GroupedSequence;
+    group(agg1:(string|Aggregator)[], agg2:(string|Aggregator)[], agg3:(string|Aggregator)[], 
+          agg4:(string|Aggregator)[], agg5:(string|Aggregator)[], agg6:(string|Aggregator)[], index:Index):GroupedSequence;
+    group(agg1:(string|Aggregator)[], agg2:(string|Aggregator)[], agg3:(string|Aggregator)[], 
+          agg4:(string|Aggregator)[], agg5:(string|Aggregator)[], agg6:(string|Aggregator)[], agg7:(string|Aggregator)[], index:Index):GroupedSequence;
+    group(agg1:(string|Aggregator)[], agg2:(string|Aggregator)[], agg3:(string|Aggregator)[], 
+          agg4:(string|Aggregator)[], agg5:(string|Aggregator)[], agg6:(string|Aggregator)[], 
+          agg7:(string|Aggregator)[], agg8:(string|Aggregator)[], index:Index):GroupedSequence;
+    group(agg1:(string|Aggregator)[], agg2:(string|Aggregator)[], agg3:(string|Aggregator)[], 
+          agg4:(string|Aggregator)[], agg5:(string|Aggregator)[], agg6:(string|Aggregator)[], 
+          agg7:(string|Aggregator)[], agg8:(string|Aggregator)[], agg9:(string|Aggregator)[], index:Index):GroupedSequence;
+  }
+
+  interface InternalSequence<S extends InternalSequence<any, any>, C extends InternalCursor<any>> extends Operation<C>, Writeable {
+    filter(rql:ExpressionFunction<boolean>,options?:{default:boolean|RethinkError}):S;
+    filter(rql:Expression<boolean>,options?:{default:boolean|RethinkError}):S;
+    filter(obj:{[key:string]:any},options?:{default:boolean|RethinkError}):S;
+
+    changes(options?:{squash:boolean; includeStates:boolean}):S;
 
     // Join
     // these return left, right
-    innerJoin(sequence:Sequence, join:JoinFunction<boolean>):Sequence;
-    outerJoin(sequence:Sequence, join:JoinFunction<boolean>):Sequence;
-    eqJoin(leftAttribute:string, rightSequence:Sequence, index?:Index):Sequence;
-    eqJoin(leftAttribute:ExpressionFunction<any>, rightSequence:Sequence, index?:Index):Sequence;
-    zip():Sequence;
+    innerJoin(sequence:S, join:JoinFunction<boolean>):S;
+    outerJoin(sequence:S, join:JoinFunction<boolean>):S;
+    eqJoin(leftAttribute:string|ExpressionFunction<any>, rightSequence:S, index?:Index):S;
+    zip():S;
 
     // Transform
-    map(transform:ExpressionFunction<any>):Sequence;
-    withFields(...selectors:any[]):Sequence;
-    concatMap(transform:ExpressionFunction<any>):Sequence;
-    orderBy(...keys:string[]):Sequence;
-    orderBy(...sorts:Sort[]):Sequence;
-    skip(n:number):Sequence;
-    limit(n:number):Sequence;
-    slice(start:number, end?:number):Sequence;
+    map(transform:ExpressionFunction<any>):S;
+    map(s2:S, transform:ExpressionFunction<any>):S;
+    map(s2:S, s3:S, transform:ExpressionFunction<any>):S;
+    map(s2:S, s3:S, s4:S, transform:ExpressionFunction<any>):S;
+    map(s2:S, s3:S, s4:S, s5:S, transform:ExpressionFunction<any>):S;
+    map(s2:S, s3:S, s4:S, s5:S, s6:S, transform:ExpressionFunction<any>):S;
+    map(s2:S, s3:S, s4:S, s5:S, s6:S, s7:S, transform:ExpressionFunction<any>):S;
+    map(s2:S, s3:S, s4:S, s5:S, s6:S, s7:S, s8:S, transform:ExpressionFunction<any>):S;
+    map(s2:S, s3:S, s4:S, s5:S, s6:S, s7:S, s8:S, s9:S, transform:ExpressionFunction<any>):S;
+    withFields(...selectors:any[]):S;
+    concatMap(transform:ExpressionFunction<any>):S;
+
+    orderBy(key:string|Sort, ...keys:(string|Sort)[]):S;
+    orderBy(index:Index):S;
+    orderBy(key:string|Sort, index:Index):S;
+    orderBy(key:string|Sort, key2:string|Sort, index:Index):S;
+    orderBy(key:string|Sort, key2:string|Sort, key3:string|Sort, index:Index):S;
+    orderBy(key:string|Sort, key2:string|Sort, key3:string|Sort, key4:string|Sort, index:Index):S;
+    orderBy(key:string|Sort, key2:string|Sort, key3:string|Sort, key4:string|Sort, key5:string|Sort, index:Index):S;
+    orderBy(key:string|Sort, key2:string|Sort, key3:string|Sort, key4:string|Sort, key5:string|Sort, key6:string|Sort, index:Index):S;
+    orderBy(key:string|Sort, key2:string|Sort, key3:string|Sort, key4:string|Sort, key5:string|Sort, key6:string|Sort, key7:string|Sort, index:Index):S;
+    orderBy(key:string|Sort, key2:string|Sort, key3:string|Sort, key4:string|Sort, key5:string|Sort, key6:string|Sort, key7:string|Sort, key8:string|Sort, index:Index):S;
+    orderBy(key:string|Sort, key2:string|Sort, key3:string|Sort, key4:string|Sort, key5:string|Sort, key6:string|Sort, key7:string|Sort, key8:string|Sort, key9:string|Sort, index:Index):S;
+
+    skip(n:number):S;
+    limit(n:number):S;
+    slice(start:number, end?:number, boundaries?:Boundaries):S;
     nth(n:number):Expression<any>;
-    indexesOf(obj:any):Sequence;
+    offsetsOf(obj:any):S;
     isEmpty():Expression<boolean>;
-    union(sequence:Sequence):Sequence;
-    sample(n:number):Sequence;
+    union(sequence:S, ...sequences:S[]):S;
+    sample(n:number):S;
 
     // Aggregate
     reduce(r:ReduceFunction<any>, base?:any):Expression<any>;
     count():Expression<number>;
-    distinct():Sequence;
-    groupedMapReduce(group:ExpressionFunction<any>, map:ExpressionFunction<any>, reduce:ReduceFunction<any>, base?:any):Sequence;
-    groupBy(...aggregators:Aggregator[]):Expression<Object>; // TODO: reduction object
+    distinct(index?:Index):S;
+    groupedMapReduce(group:ExpressionFunction<any>, map:ExpressionFunction<any>, reduce:ReduceFunction<any>, base?:any):S;
+
     contains(prop:string):Expression<boolean>;
 
     // Manipulation
-    pluck(...props:string[]):Sequence;
-    without(...props:string[]):Sequence;
+    pluck(...props:string[]):S;
+    without(...props:string[]):S;
   }
 
   interface ExpressionFunction<U> {
@@ -284,10 +343,14 @@ declare module rethinkdb {
     dropped: number;
   }
 
-  interface Index {
-    index: string;
+  interface Boundaries {
     leftBound?: string; // 'closed'
-    rightBound?: string; // 'open'
+    rightBound?: string; // 'open'    
+  }
+
+  interface Index extends Boundaries{
+    index: string;
+    multi?: boolean;
   }
 
   interface Expression<T> extends Writeable, Operation<T> {
@@ -317,7 +380,7 @@ declare module rethinkdb {
 
       default(value:T):Expression<T>;
   }
-
+  
   interface Options {
     /**
      * Whether or not outdated reads are OK.
@@ -413,7 +476,11 @@ declare module rethinkdb {
 
   interface Aggregator {}
   interface Sort {}
-
+  interface RethinkError {}
+  interface GroupedObject {
+    group: any;
+    reduction: any;
+  }
   interface Time {}
 
 

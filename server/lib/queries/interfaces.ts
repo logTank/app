@@ -1,33 +1,57 @@
-/// <reference path="../../../typings/tsd.d.ts" />
+/// <reference path="../interfaces.ts" />
+
+import Connection = rethinkdb.Connection;
+import ConnectionOptions = rethinkdb.ConnectionOptions;
+import Expression = rethinkdb.Expression;
+import ExpressionFunction = rethinkdb.ExpressionFunction;
+import Operation = rethinkdb.Operation;
+import Sequence = rethinkdb.Sequence;
+import CreateResult = rethinkdb.CreateResult;
+import DropResult = rethinkdb.DropResult;
+import Db = rethinkdb.Db;
+import Table = rethinkdb.Table;
+import Sort = rethinkdb.Sort;
+import Aggregator = rethinkdb.Aggregator;
+import Time = rethinkdb.Time;
 
 interface IRethinkdbModule {
   minval:any;
   maxval:any;
   
-  connect(host:rethinkdb.ConnectionOptions, cb:(err:Error, conn:rethinkdb.Connection)=>void);
-  connect(host:string, cb:(err:Error, conn:rethinkdb.Connection)=>void);
-  connect(host:rethinkdb.ConnectionOptions): Promise<rethinkdb.Connection>;
-  connect(host:string): Promise<rethinkdb.Connection>;
+  connect(host:ConnectionOptions, cb:(err:Error, conn:Connection)=>void);
+  connect(host:string, cb:(err:Error, conn:Connection)=>void);
+  connect(host:ConnectionOptions): Promise<Connection>;
+  connect(host:string): Promise<Connection>;
   
-  dbCreate(name:string): rethinkdb.Operation<rethinkdb.CreateResult>;
-  dbDrop(name:string): rethinkdb.Operation<rethinkdb.DropResult>;
-  dbList():rethinkdb.Operation<string[]>;
+  dbCreate(name:string): Operation<CreateResult>;
+  dbDrop(name:string): Operation<DropResult>;
+  dbList():Operation<string[]>;
 
-  db(name:string):rethinkdb.Db;
-  table(name:string, options?:{useOutdated:boolean, identifierFormat?:string}):rethinkdb.Table;
+  db(name:string):Db;
+  table(name:string, options?:{useOutdated:boolean; identifierFormat?:string}):Table;
 
-  asc(property:string):rethinkdb.Sort;
-  desc(property:string):rethinkdb.Sort;
+  asc(property:string):Sort;
+  desc(property:string):Sort;
 
-  count:rethinkdb.Aggregator;
-  sum(prop:string):rethinkdb.Aggregator;
-  avg(prop:string):rethinkdb.Aggregator;
+  count:Aggregator;
+  sum(prop:string):Aggregator;
+  avg(prop:string):Aggregator;
 
-  row(name:string):rethinkdb.Expression<any>;
-  expr(stuff:any):rethinkdb.Expression<any>;
+  row(name:string):Expression<any>;
+  expr(stuff:any):Expression<any>;
 
-  now():rethinkdb.Time;
+  now():Time;
 
   // Control Structures
-  branch(test:rethinkdb.Expression<boolean>, trueBranch:rethinkdb.Expression<any>, falseBranch:rethinkdb.Expression<any>):rethinkdb.Expression<any>;
+  branch(test:Expression<boolean>, trueBranch:Expression<any>, falseBranch:Expression<any>):Expression<any>;
+  
+  map(s:Sequence, transform:ExpressionFunction<any>):Sequence;
+  map(s:Sequence, s2:Sequence, transform:ExpressionFunction<any>):Sequence;
+  map(s:Sequence, s2:Sequence, s3:Sequence, transform:ExpressionFunction<any>):Sequence;
+  map(s:Sequence, s2:Sequence, s3:Sequence, s4:Sequence, transform:ExpressionFunction<any>):Sequence;
+  map(s:Sequence, s2:Sequence, s3:Sequence, s4:Sequence, s5:Sequence, transform:ExpressionFunction<any>):Sequence;
+  map(s:Sequence, s2:Sequence, s3:Sequence, s4:Sequence, s5:Sequence, s6:Sequence, transform:ExpressionFunction<any>):Sequence;
+  map(s:Sequence, s2:Sequence, s3:Sequence, s4:Sequence, s5:Sequence, s6:Sequence, s7:Sequence, transform:ExpressionFunction<any>):Sequence;
+  map(s:Sequence, s2:Sequence, s3:Sequence, s4:Sequence, s5:Sequence, s6:Sequence, s7:Sequence, s8:Sequence, transform:ExpressionFunction<any>):Sequence;
+  map(s:Sequence, s2:Sequence, s3:Sequence, s4:Sequence, s5:Sequence, s6:Sequence, s7:Sequence, s8:Sequence, s9:Sequence, transform:ExpressionFunction<any>):Sequence;
 }
