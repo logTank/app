@@ -12,19 +12,19 @@ interface ITagsCache {
 var TagsCache = new Mongo.Collection<ITagsCache>('tags_cache'); 
 
 Meteor.methods({
-	listTags: () => {
-		var cached = TagsCache.findOne('cz5xdocj');
+	listTags: (forceReload: boolean = false) => {
+		var cached:ITagsCache;
+		
+		if (!forceReload) { cached = TagsCache.findOne('cz5xdocj'); }
 		
 		if (!cached) {
 			Async.runSync(done => {
 				new RethinkDB().getAllTagsForUser('cz5xdocj').then(tags => {
 					cached = {_id: 'cz5xdocj', tags: tags};
-					TagsCache.upsert({_id: 'cz5xdocj'}, {$set: {tags: tags}});
 					done();	
 				});
 			});
-		} else {
-			console.log('Got tags from cache');
+			TagsCache.upsert({_id: cached._id}, {$set: {tags: cached.tags}});
 		}
 		
 		return cached.tags;

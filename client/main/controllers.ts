@@ -4,10 +4,14 @@ var leftNavbarId = 'leftNavbar';
 var rightNavbarId = 'rightNavbar';
 
 class MainController {
+	public availableTags: string[];
 	public toggleLeft = this.buildToggler(leftNavbarId);
 	public toggleRight = this.buildToggler(rightNavbarId);
 	
-	constructor(private $mdSidenav: angular.material.MDSidenavService, private $mdUtil: any) {
+	constructor(private $mdSidenav: angular.material.MDSidenavService, private $mdUtil: any, private $meteor: any) {
+		$meteor.call('listTags').then(tags => {
+			this.availableTags = tags;
+		});
 	}
 	
 	private buildToggler(navID: string): Function {
@@ -39,6 +43,6 @@ class RightNavbarController extends NavbarController {
 }
 
 angular.module('logtank')
-	.controller('MainController', ['$mdSidenav', '$mdUtil', MainController])
+	.controller('MainController', ['$mdSidenav', '$mdUtil', '$meteor', MainController])
 	.controller('LeftNavbarController', ['$mdSidenav', LeftNavbarController])
 	.controller('RightNavbarController', ['$mdSidenav', RightNavbarController]);
