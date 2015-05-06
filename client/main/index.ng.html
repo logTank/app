@@ -8,11 +8,6 @@
       <md-button ng-click="leftNavbar.close()" class="md-primary" hide-gt-md>
         Close Sidenav Left
       </md-button>
-      <p hide-md show-gt-md>
-        This sidenav is locked open on your device. To go back to the default behavior,
-        narrow your display.
-      </p>
-      <md-divider></md-divider>
       <md-list role="list">
         <md-subheader class="md-no-sticky">Query</md-subheader>
       <!-- ngRepeat: item in menu -->
@@ -80,16 +75,16 @@
         <div layout>
           <div>
             <h2>From</h2>
-            <input type="date"/>
-            <input type="time"/>  
+            <input type="date" aria-labelledby="date-from-label" aria-conrols="date-from-slider"/>
+            <input type="time" aria-labelledby="time-from-label" aria-controls="time-from-slider"/>  
           </div>
         </div>
             
         <div layout>
           <div flex="10" layout layout-align="center center">
-            <span class="md-body-1">Date From</span>
+            <label for="date-from-slider" id="date-from-label" class="md-body-1">Date From</label>
           </div>
-          <md-slider flex min="0" max="31" ng-model="color.red" aria-label="red" id="red-slider" class>
+          <md-slider flex min="0" max="31" id="date-from-slider" class>
           </md-slider>
           <div flex="20">
           </div>
@@ -97,9 +92,9 @@
         
         <div layout>
           <div flex="10" layout layout-align="center center">
-            <span class="md-body-1">Time From</span>
+            <label for="time-from-slider" id="time-from-label" class="md-body-1">Time From</label>
           </div>
-          <md-slider flex ng-model="color.blue" aria-label="blue" id="blue-slider" class="md-primary">
+          <md-slider flex aria-label="blue" id="time-from-slider" class="md-primary">
           </md-slider>
           <div flex="20">
           </div>
@@ -109,8 +104,8 @@
          <div layout>
           <div>
             <h2>To</h2>
-            <input type="date"/>
-            <input type="time"/>     
+            <input type="date" aria-label="date-to" aria-controls="date-to-slider"/>
+            <input type="time" aria-label="time-to" aria-controls="time-to-slider"/>     
           </div>
         </div>
         
@@ -118,7 +113,7 @@
           <div flex="10" layout layout-align="center center">
             <span class="md-body-1">Date To</span>
           </div>
-          <md-slider flex min="0" max="31" ng-model="color.red" aria-label="red" id="red-slider" class>
+          <md-slider flex min="0" max="31" aria-label="date-to" id="date-to-slider" class>
           </md-slider>
           <div flex="20">
           </div>
@@ -128,7 +123,7 @@
           <div flex="10" layout layout-align="center center">
             <span class="md-body-1">Time To</span>
           </div>
-          <md-slider flex ng-model="color.blue" aria-label="blue" id="blue-slider" class="md-primary">
+          <md-slider flex ng-model="color.blue" aria-label="time-to" id="time-to-slider" class="md-primary">
           </md-slider>
           <div flex="20">
           </div>

@@ -1,48 +1,43 @@
 /// <reference path="../tsd.d.ts" />
+/// <reference path="../lib/baseControllers.ts" />
 
 var leftNavbarId = 'leftNavbar';
 var rightNavbarId = 'rightNavbar';
 
-class MainController {
-	public availableTags: string[];
-	public toggleLeft = this.buildToggler(leftNavbarId);
-	public toggleRight = this.buildToggler(rightNavbarId);
+module logtank {
+	class MainController extends SidebarEnabledController {
+		public availableTags: string[];
 	
-	constructor(private $mdSidenav: angular.material.MDSidenavService, private $mdUtil: any, private $meteor: any) {
-		$meteor.call('listTags').then(tags => {
-			this.availableTags = tags;
-		});
+		constructor($mdSidenav: angular.material.MDSidenavService, $mdUtil: any, private $meteor: any) {
+			super($mdSidenav, $mdUtil, leftNavbarId, rightNavbarId);
+			$meteor.call('listTags').then(tags => {
+				this.availableTags = tags;
+			});
+		}
 	}
 	
-	private buildToggler(navID: string): Function {
-		var debounceFn = this.$mdUtil.debounce(() => {
-			this.$mdSidenav(navID).toggle()
-		}, 300);
-		return debounceFn;
+	class NavbarController {
+		constructor(private navID: string, private $mdSidenav: angular.material.MDSidenavService) {	}
+		
+		public close() {
+			this.$mdSidenav(this.navID).close();
+		}
 	}
-}
-
-class NavbarController {
-	constructor(private navID: string, private $mdSidenav: angular.material.MDSidenavService) {	}
 	
-	public close() {
-		this.$mdSidenav(this.navID).close();
+	class LeftNavbarController extends NavbarController {
+		constructor($mdSidenav: angular.material.MDSidenavService) {
+			super(leftNavbarId, $mdSidenav)
+		}
 	}
-}
-
-class LeftNavbarController extends NavbarController {
-	constructor($mdSidenav: angular.material.MDSidenavService) {
-		super(leftNavbarId, $mdSidenav)
+	
+	class RightNavbarController extends NavbarController {
+		constructor($mdSidenav: angular.material.MDSidenavService) {
+			super(rightNavbarId, $mdSidenav);
+		}
 	}
+	
+	angular.module('logtank')
+		.controller('MainController', ['$mdSidenav', '$mdUtil', '$meteor', MainController])
+		.controller('LeftNavbarController', ['$mdSidenav', LeftNavbarController])
+		.controller('RightNavbarController', ['$mdSidenav', RightNavbarController]);	
 }
-
-class RightNavbarController extends NavbarController {
-	constructor($mdSidenav: angular.material.MDSidenavService) {
-		super(rightNavbarId, $mdSidenav);
-	}
-}
-
-angular.module('logtank')
-	.controller('MainController', ['$mdSidenav', '$mdUtil', '$meteor', MainController])
-	.controller('LeftNavbarController', ['$mdSidenav', LeftNavbarController])
-	.controller('RightNavbarController', ['$mdSidenav', RightNavbarController]);
