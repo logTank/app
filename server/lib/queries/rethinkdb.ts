@@ -1,28 +1,57 @@
 /// <reference path="interfaces.ts" />
 
 var r: IRethinkdbModule = Meteor.npmRequire('rethinkdb');
-//var r = Meteor.npmRequire('rethinkdbdash')({
-//		servers: [{host: 'localhost', port: 28015}]
-//	});
 
 class RethinkDBLogic {
+	private static connectionOptions: rethinkdb.ConnectionOptions = {
+		host: process.env.RETHINKDB_HOST || 'localhost',
+		port: process.env.RETHINKDB_PORT || 28015,
+		db: process.env.RETHINKDB_LOGTANK_DB || 'logtank_store',
+		authKey: process.env.RETHINKDB_AUTH_KEY || null,
+		timeout: process.env.RETHINKDB_TIMEOUT || 20
+	};
 	private connectionPromise: Promise<rethinkdb.Connection>;
+	private connection: rethinkdb.Connection;
 	
-	public getConnection(): Promise<rethinkdb.Connection> {
+	public static getAllTagsForCustomer(customerId: string): Promise<string[]> {
+		var rethink = new RethinkDBLogic();
+		
+		return rethink.getAllTagsForCustomer(customerId).then(tags => {
+			rethink.dispose();
+			return tags;
+		});
+	}
+		
+	public getAllTagsForCustomer(customerId: string): Promise<string[]> {
+		return this.getConnection().then(conn => {
+			return r.table(customerId).distinct({index: 'tag'}).run(conn);
+		}).then(cursor => {
+			return cursor.toArray();
+		});
+	}
+	
+	public dispose() {
+		if (this.connectionPromise) {
+			this.connectionPromise.cancel();
+		}
+		if (this.connection) {
+			this.connection.close();
+		}
+	}
+	
+	private getConnection(): Promise<rethinkdb.Connection> {
 		if (!this.connectionPromise) {
-			this.connectionPromise = r.connect({db: 'logtank_store'}); 
+			this.connectionPromise = r.connect(RethinkDBLogic.connectionOptions);
+			this.connectionPromise.then(conn => {
+				this.connection = conn;
+			});
 		}
 		return this.connectionPromise;
 	}
-	
-	public getAllTagsForUser(userId: string): Promise<string[]> {
-		return this.getConnection().then(conn => {
-			return r.table(userId).distinct({index: 'tag'}).run(conn);
-		}).then(cursor => {
-			return cursor.toArray();
-		})
-	}
 }
 
-declare var RethinkDB: new () => RethinkDBLogic;
+declare var RethinkDB: {
+	new (): RethinkDBLogic;
+	getAllTagsForCustomer(customerId: string): Promise<string[]>;
+};
 RethinkDB = RethinkDBLogic;
