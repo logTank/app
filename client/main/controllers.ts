@@ -1,10 +1,10 @@
 /// <reference path="../tsd.d.ts" />
 /// <reference path="../lib/baseControllers.ts" />
 
-var leftNavbarId = 'leftNavbar';
-var rightNavbarId = 'rightNavbar';
-
 module logtank {
+	var leftNavbarId = 'leftNavbar';
+	var rightNavbarId = 'rightNavbar';
+
 	class MainController extends SidebarEnabledController {
 		public availableTags: string[];
 	

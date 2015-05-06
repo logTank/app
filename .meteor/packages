@@ -7,7 +7,6 @@
 meteor-platform
 autopublish
 insecure
-meteortypescript:compiler
 urigo:angular
 angular:angular-material
 fourseven:scss
@@ -17,3 +16,4 @@ meteorhacks:cluster
 
 npm-container
 meteorhacks:npm
+mologie:typescript
