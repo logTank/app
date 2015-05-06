@@ -17,7 +17,7 @@ module logtank {
 			
 			if (!cached) {
 				Async.runSync(done => {
-					new RethinkDB().getAllTagsForUser('cz5xdocj').then(tags => {
+					RethinkDB.getAllTagsForCustomer('cz5xdocj').done(tags => {
 						cached = {_id: 'cz5xdocj', tags: tags};
 						done();	
 					});
