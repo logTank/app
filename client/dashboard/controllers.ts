@@ -1,5 +1,5 @@
 /// <reference path="../tsd.d.ts" />
-/// <reference path="../lib/baseControllers.ts" />
+/// <reference path="../lib/tsd.d.ts" />
 
 module logtank {
 	var leftSidebarId = 'leftNavbar';
@@ -17,12 +17,44 @@ module logtank {
 	}
 	
 	class SearchByTagsController {
-		public availableTags: string[];
+		public tags = {
+			available: <string[]>[],
+			selected: <string[]>[],
+			currentTag: <string>null,
+			searchText: ''
+		}
+	
+		public conditions: {
+			fieldName?: string;
+			fieldType?: string;
+			conditionValue?: string;
+		}[] = [];
 	
 		constructor(private $meteor: any) {
 			$meteor.call('listTags').then(tags => {
-				this.availableTags = tags;
+				this.tags.available = tags;
 			});
+			
+			this.conditions.push({fieldName: 'LoggerLevel', fieldType: 'string', conditionValue: 'error'},
+								{fieldName: 'location.host', fieldType: 'string', conditionValue: 'localhost'});
+		}
+		
+		public filteredTags() {
+			var query = this.tags.searchText;
+			if (query && query.length) {
+				var elementsMatchingQuery = this.tags.available.filter(createSimpleFilterFor(query));
+				return except(elementsMatchingQuery, this.tags.selected);
+			} else {
+				return [];
+			}
+		}
+		
+		public appendCondition() {
+			this.conditions.push({});
+		}
+		
+		public removeCondition(index: number) {
+			this.conditions.splice(index, 1);
 		}
 	}
 	
@@ -55,12 +87,12 @@ module logtank {
 				url: '/tags',
 				templateUrl: 'client/dashboard/tags.ng.html',
 				controller: 'SearchByTagsController',
-				controllerAs: 'searchByTags'
+				controllerAs: 'ctrl'
 			}).state('dashboard.timestamps', {
 				url: '/timestamps',
 				templateUrl: 'client/dashboard/timestamps.ng.html',
 				controller: 'SearchByTimestampsController',
-				controllerAs: 'searchByTimestamps'
+				controllerAs: 'ctrl'
 			});
 			$urlRouterProvider.when('/dashboard', '/dashboard/tags');
 		}]);

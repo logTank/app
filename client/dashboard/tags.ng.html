@@ -1,5 +1,58 @@
 <md-card>
-  <md-card-content>
-	<p ng-repeat="t in searchByTags.availableTags">{{t}}</p>
+  <md-card-content class="md-padding" layout="column">
+<!--  	<p ng-repeat="t in searchByTags.availableTags">{{t}}</p>--> 
+    <md-content layout-padding layout="column" class="autocomplete">
+      <h2>Select Tags</h2>
+      <md-chips ng-model="ctrl.tags.selected" md-autocomplete-snap md-require-match>
+        <md-autocomplete          
+            md-selected-item="ctrl.tags.currentTag"
+            md-search-text="ctrl.tags.searchText"
+            md-items="item in ctrl.filteredTags()"
+            md-item-text="ctrl.tags.available"
+            md-no-cache="true"
+            md-autoselect="true"
+            placeholder="Search for a tag">
+          <span md-highlight-text="ctrl.tags.searchText">{{item}}</span>
+        </md-autocomplete>
+      </md-chips>
+    </md-content>
+    
+    <md-content flex layout="column">
+    
+      <div layout="row" layout-align="space-between end">
+        <h2 flex="25">Field Name</h2>
+        <h2 flex="25">Type</h2>
+        <h2 flex="25">Value</h2>
+        <div flex="5"></div>
+      </div>
+     
+      
+      <div class="tag-input-rows" layout="row" layout-align="space-around center" ng-repeat="c in ctrl.conditions" style="border-radius:4px; background-color:rgba(158, 158, 158, 0.2); margin-bottom:5px;"> 
+
+        <md-input-container md-no-float flex="25">
+          <input placeholder="Field Name" ng-model="c.fieldName">
+        </md-input-container>
+
+        <md-select placeholder="Value" ng-model="c.fieldType" flex="25">
+          <md-option value="string">String</md-option>
+          <md-option value="number">Number</md-option>
+          <md-option value="boolean">Boolean</md-option>
+          <md-option value="regexp">RegExp</md-option>
+        </md-select>
+
+        <md-input-container md-no-float flex="25">
+          <input placeholder="Value" ng-model="c.conditionValue">
+        </md-input-container>
+        <div>
+          <md-button class="md-fab md-mini" aria-label="Remove a Row" ng-click="ctrl.removeCondition($index)" style="font-size:36px;" flex="5">&#215;</md-button>
+        </div>
+      </div>
+      <div layout="row" layout-align="start center">
+        <md-button class="md-fab md-primary" aria-label="Add a new Row" ng-click="ctrl.appendCondition($index)" style="font-size:48px;">&#43;</md-button>
+        <p style="text-transform:uppercase">New row</p>
+      </div>
+    </md-content>
+    
+    
   </md-card-content>
 </md-card>

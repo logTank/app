@@ -2,10 +2,6 @@
 	background-color:#E0E0E0;
 }
 
-h1{
-	color:white;
-}
-
 .top-toolbar{
 	padding: 10px 0 10px 0;
 }
@@ -13,4 +9,18 @@ h1{
 .top-logo{
 	height:70px;
 	padding-right:10px;
+}
+
+a.active{
+	background-color: rgba(158,158,158,0.2);
+}
+
+.tag-input-rows{
+	md-input-container{
+		padding:2px;
+	}
+	md-select{
+		margin-top: 2px;
+  		margin-bottom: 2px;
+	}
 }

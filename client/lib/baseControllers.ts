@@ -25,4 +25,22 @@ module logtank {
 			this.$mdSidenav(this.navID).close();
 		}
 	}	
+	
+	export function createSimpleFilterFor(query: string) {
+		var query = query.toLocaleLowerCase();
+		
+		return (item: string) => {
+			return item.toLocaleLowerCase().indexOf(query) != -1;
+		}
+	}
+	
+	export function except<T>(baseArray: T[], without: T[]): T[] {
+		if (baseArray && baseArray.length) {
+			return baseArray.filter(item => {
+				return without.indexOf(item) == -1;
+			});
+		} else {
+			return [];
+		}
+	}
 }

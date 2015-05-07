@@ -1,78 +1,102 @@
 <!--Query Card-->
-<md-card>
-  <md-toolbar>
-    <div class="md-toolbar-tools">
-      <h2 class="md-flex">Query</h2>
-    </div>
-  </md-toolbar>
-  <md-card-content>
-    <div layout>
-      <div>
-        <h2>From</h2>
-        <input type="date" aria-labelledby="date-from-label" aria-conrols="date-from-slider"/>
-        <input type="time" aria-labelledby="time-from-label" aria-controls="time-from-slider"/>  
+<div layout="row" layout-sm="column">
+  <md-card flex>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2 class="md-flex">Query</h2>
       </div>
-    </div>
-        
-    <div layout>
-      <div flex="10" layout layout-align="center center">
-        <label for="date-from-slider" id="date-from-label" class="md-body-1">Date From</label>
-      </div>
-      <md-slider flex min="0" max="31" id="date-from-slider" class>
-      </md-slider>
-      <div flex="20">
-      </div>
-    </div>
-    
-    <div layout>
-      <div flex="10" layout layout-align="center center">
-        <label for="time-from-slider" id="time-from-label" class="md-body-1">Time From</label>
-      </div>
-      <md-slider flex aria-label="blue" id="time-from-slider" class="md-primary">
-      </md-slider>
-      <div flex="20">
-      </div>
-    </div>
-
+    </md-toolbar>
+    <md-card-content>
 <!--To-->  
-     <div layout>
-      <div>
-        <h2>To</h2>
-        <input type="date" aria-label="date-to" aria-controls="date-to-slider"/>
-        <input type="time" aria-label="time-to" aria-controls="time-to-slider"/>     
+      <div layout>
+        <div>
+          <h2>From </h2>
+          <div layout layout-sm="column">
+            <md-input-container>
+              <label>Date</label>
+              <input type="date" aria-labelledby="date-from-label" aria-conrols="date-from-slider"/>
+            </md-input-container>
+            <md-input-container>
+              <label>Time</label>
+              <input type="time" aria-labelledby="time-from-label" aria-controls="time-from-slider"/> 
+            </md-input-container> 
+          </div>
+        </div>
       </div>
-    </div>
-    
-    <div layout>
-      <div flex="10" layout layout-align="center center">
-        <span class="md-body-1">Date To</span>
+          
+      <div layout>
+        <div flex="15" layout layout-align="center center">
+          <label for="date-from-slider" id="date-from-label" class="md-body-1">Date From</label>
+        </div>
+        <md-slider flex min="0" max="31" id="date-from-slider" class>
+        </md-slider>
+        <div flex="5">
+        </div>
       </div>
-      <md-slider flex min="0" max="31" aria-label="date-to" id="date-to-slider" class>
-      </md-slider>
-      <div flex="20">
+      
+      <div layout>
+        <div flex="15" layout layout-align="center center">
+          <label for="time-from-slider" id="time-from-label" class="md-body-1">Time From</label>
+        </div>
+        <md-slider flex aria-label="blue" id="time-from-slider" class="md-primary">
+        </md-slider>
+        <div flex="5">
+        </div>
       </div>
-    </div>
-    
-    <div layout>
-      <div flex="10" layout layout-align="center center">
-        <span class="md-body-1">Time To</span>
+  
+  <!--To-->    
+       <div layout>
+        <div>
+          <h2>To</h2>
+          <div layout layout-sm="column">
+            <md-input-container>
+              <label>Date</label>
+              <input type="date" aria-label="date-to" aria-controls="date-to-slider"/>
+            </md-input-container>
+            <md-input-container>
+              <label>Time</label>
+              <input type="time" aria-label="time-to" aria-controls="time-to-slider"/> 
+            </md-input-container> 
+          </div>    
+        </div>
       </div>
-      <md-slider flex ng-model="color.blue" aria-label="time-to" id="time-to-slider" class="md-primary">
-      </md-slider>
-      <div flex="20">
+      
+      <div layout>
+        <div flex="15" layout layout-align="center center">
+          <span class="md-body-1">Date To</span>
+        </div>
+        <md-slider flex min="0" max="31" aria-label="date-to" id="date-to-slider" class>
+        </md-slider>
+        <div flex="5">
+        </div>
       </div>
-    </div>
-        
-  </md-card-content>
-</md-card>
-
-<!--Result Card-->
-<md-card>
-  <md-toolbar>
-    <div class="md-toolbar-tools">
-      <h2 class="md-flex">Result</h2>
-    </div>
-  </md-toolbar>
-  <md-card-content>
-  </md-card-content>
-</md-card>
+      
+      <div layout>
+        <div flex="15" layout layout-align="center center">
+          <span class="md-body-1">Time To</span>
+        </div>
+        <md-slider flex ng-model="color.blue" aria-label="time-to" id="time-to-slider" class="md-primary">
+        </md-slider>
+        <div flex="5">
+        </div>
+      </div>
+      
+      <div layout="row" layout-align="center center">
+        <md-button class="md-raised md-accent">Display result &#10152;</md-button>
+      </div>
+      
+    </md-card-content>
+  </md-card>
+  
+  <!--Result Card-->
+  <md-card flex>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2 class="md-flex">Result</h2>
+      </div>
+    </md-toolbar>
+    <md-card-content>
+      <h1>Eye opening result :)</h1>
+    </md-card-content>
+  </md-card>
+</div>
