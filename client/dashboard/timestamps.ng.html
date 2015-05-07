@@ -9,19 +9,17 @@
     <md-card-content>
 <!--To-->  
       <div layout>
-        <div>
-          <h2>From </h2>
-          <div layout layout-sm="column">
-            <md-input-container>
+          <div layout="row" layout-sm="column" layout-align="space-between end">
+            <h2 flex>From </h2>
+            <md-input-container flex>
               <label>Date</label>
               <input type="date" aria-labelledby="date-from-label" aria-conrols="date-from-slider"/>
             </md-input-container>
-            <md-input-container>
+            <md-input-container flex>
               <label>Time</label>
               <input type="time" aria-labelledby="time-from-label" aria-controls="time-from-slider"/> 
             </md-input-container> 
           </div>
-        </div>
       </div>
           
       <div layout>
@@ -45,19 +43,17 @@
       </div>
   
   <!--To-->    
-       <div layout>
-        <div>
-          <h2>To</h2>
-          <div layout layout-sm="column">
-            <md-input-container>
+      <div layout>
+        <div layout="row" layout-sm="column" layout-align="space-between end">
+          <h2 flex>To</h2>
+            <md-input-container flex>
               <label>Date</label>
               <input type="date" aria-label="date-to" aria-controls="date-to-slider"/>
             </md-input-container>
-            <md-input-container>
+            <md-input-container flex>
               <label>Time</label>
               <input type="time" aria-label="time-to" aria-controls="time-to-slider"/> 
-            </md-input-container> 
-          </div>    
+            </md-input-container>    
         </div>
       </div>
       
