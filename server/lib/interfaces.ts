@@ -1,3 +1,4 @@
+/// <reference path="../../lib/tsd.d.ts" />
 /// <reference path="../../typings/tsd.d.ts" />
 /// <reference path="queries/rethinkdb.ts" />
 

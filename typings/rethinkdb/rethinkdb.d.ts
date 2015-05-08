@@ -237,7 +237,7 @@ declare module rethinkdb {
   interface InternalSequence<S extends InternalSequence<any, any>, C extends InternalCursor<any>> extends Operation<C>, Writeable {
     filter(rql:ExpressionFunction<boolean>,options?:{default:boolean|RethinkError}):S;
     filter(rql:Expression<boolean>,options?:{default:boolean|RethinkError}):S;
-    filter(obj:{[key:string]:any},options?:{default:boolean|RethinkError}):S;
+    filter(obj:{[key:string]:any}|any,options?:{default:boolean|RethinkError}):S;
 
     changes(options?:{squash:boolean; includeStates:boolean}):S;
 
@@ -379,6 +379,28 @@ declare module rethinkdb {
       hasFields(...fields:string[]):Expression<boolean>;
 
       default(value:T):Expression<T>;
+  }
+  
+  interface ExpressionString extends Expression<string> {
+    /**
+     * Matches against a regular expression. 
+     * 
+     * Accepts RE2 syntax (https://code.google.com/p/re2/wiki/Syntax). 
+     * You can enable case-insensitive matching by prefixing the regular expression with (?i). 
+     * See the linked RE2 documentation for more flags.
+     * 
+     * The match command does not support backreferences.
+     * 
+     * @return 
+     * If there is a match, returns an object with the fields:
+     *    - str: The matched string
+     *    - start: The matched string’s start
+     *    - end: The matched string’s end
+     *    - groups: The capture groups defined with parentheses
+     * If no match is found, returns null.
+     */
+    match(regexp: string): {str: string; start: number; end: number; groups: any[]}
+    
   }
   
   interface Options {

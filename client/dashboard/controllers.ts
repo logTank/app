@@ -2,7 +2,13 @@
 /// <reference path="../lib/tsd.d.ts" />
 
 module logtank {
+	var collection = new Mongo.Collection<any>('logs_by_tags');
 	var leftSidebarId = 'leftNavbar';
+	
+	interface IClientQueryCondition extends IQueryCondition {
+		rawType: string;
+		rawValue: string;
+	}
 	
 	class DashboardController extends SidebarEnabledController {
 		constructor($mdSidenav: angular.material.MDSidenavService, $mdUtil: any) {
@@ -24,19 +30,17 @@ module logtank {
 			searchText: ''
 		}
 	
-		public conditions: {
-			fieldName?: string;
-			fieldType?: string;
-			conditionValue?: string;
-		}[] = [];
+		public conditions: IClientQueryCondition[] = [];
+		
+		public samplelogs;
 	
-		constructor(private $meteor: any) {
-			$meteor.call('listTags').then(tags => {
+		constructor(private $meteor: angular.meteor.IMeteorService) {
+			$meteor.call<string[]>('listTags').then(tags => {
 				this.tags.available = tags;
 			});
 			
-			this.conditions.push({fieldName: 'LoggerLevel', fieldType: 'string', conditionValue: 'error'},
-								{fieldName: 'location.host', fieldType: 'string', conditionValue: 'localhost'});
+//			this.conditions.push({fieldName: 'LoggerLevel', type: QueryConditionType.String, value: 'error'},
+//								{fieldName: 'location.host', type: QueryConditionType.String, value: 'localhost'});
 		}
 		
 		public filteredTags() {
@@ -50,11 +54,45 @@ module logtank {
 		}
 		
 		public appendCondition() {
-			this.conditions.push({});
+			this.conditions.push(<any>{});
 		}
 		
 		public removeCondition(index: number) {
 			this.conditions.splice(index, 1);
+		}
+		
+		public runQuery() {
+			var queryId = Random.id();
+			this.$meteor.subscribe('logs_by_tags', queryId, this.tags.selected, this.conditions).then(subscriptionHandle => {
+				this.samplelogs = this.$meteor.collection(collection);
+			}, err => {
+				console.error(err);
+			});
+		}
+		
+		private getTranslatedConditionsForServer() {
+			var ret: IQueryCondition[] = [];
+			
+			if (this.conditions && this.conditions.length) {
+				this.conditions.forEach(c => {
+					ret.push({
+						fieldName: c.fieldName,
+						type: QueryConditionType[c.rawType],
+						value: this.convertConditionValueProperly(c)
+					});
+				});
+			}
+			return ret;
+		}
+		
+		private convertConditionValueProperly(condition: IClientQueryCondition): string|number|boolean {
+			switch (QueryConditionType[condition.rawType]) {
+				case QueryConditionType.Boolean: return !!condition.rawValue;
+				case QueryConditionType.Number: return +condition.rawValue;
+				case QueryConditionType.String:
+				case QueryConditionType.RegExp: return condition.rawValue;
+				default: throw new Error('Invalid QueryConditionType: ' + condition.rawType);
+			}
 		}
 	}
 	

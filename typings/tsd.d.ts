@@ -6,3 +6,4 @@
 /// <reference path="angular-ui-router/angular-ui-router.d.ts" />
 /// <reference path="rethinkdb/rethinkdb.d.ts" />
 /// <reference path="bluebird/bluebird.d.ts" />
+/// <reference path="angular-meteor/angular-meteor.d.ts" />

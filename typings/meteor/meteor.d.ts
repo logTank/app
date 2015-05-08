@@ -19,6 +19,7 @@ declare module Match {
 	var Any;
 	var String;
 	var Integer;
+	var Number;
 	var Boolean;
 	var undefined;
 	//function null();  // not allowed in TypeScript
