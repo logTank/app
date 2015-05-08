@@ -40,7 +40,7 @@
             <input placeholder="Field Name" ng-model="c.fieldName">
           </md-input-container>
   
-          <md-select placeholder="Value" ng-model="c.fieldType" flex="25">
+          <md-select placeholder="Type" ng-model="c.rawType" flex="25">
             <md-option value="String">String</md-option>
             <md-option value="Number">Number</md-option>
             <md-option value="Boolean">Boolean</md-option>
@@ -48,18 +48,18 @@
           </md-select>
   
           <md-input-container md-no-float flex="25">
-            <input placeholder="Value" ng-model="c.conditionValue">
+            <input placeholder="Value" ng-model="c.rawValue">
           </md-input-container>
           <div>
-            <md-button class="md-fab md-mini" aria-label="Remove a Row" ng-click="ctrl.removeCondition($index)" style="font-size:36px;" flex="5">&#215;</md-button>
+            <md-button class="md-fab md-mini" aria-label="Remove a condition" ng-click="ctrl.removeCondition($index)" style="font-size:36px;" flex="5">&#215;</md-button>
           </div>
         </div>
         <div layout="row" layout-align="space-between center">
           <div layout="row" layout-align="start center">
-            <md-button class="md-fab md-primary" aria-label="Add a new Row" ng-click="ctrl.appendCondition($index)" style="font-size:48px;">&#43;</md-button>
-            <p style="text-transform:uppercase">New row</p>
+            <md-button class="md-fab md-primary" aria-label="Add a new condition" ng-click="ctrl.appendCondition($index)" style="font-size:48px;">&#43;</md-button>
+            <p style="text-transform:uppercase">Add a new condition</p>
           </div>
-          <md-button class="md-raised md-accent">Display result &#10152;</md-button>
+          <md-button class="md-raised md-accent" ng-click="ctrl.runQuery()">Display result &#10152;</md-button>
         </div>
       </md-content>
     </md-card-content>
@@ -73,7 +73,7 @@
       </div>
     </md-toolbar>
     <md-card-content>
-      <h1>Eye opening result :)</h1>
+      <pre>{{ctrl.result.logs | json}}</pre>
     </md-card-content>
   </md-card>
 </div>

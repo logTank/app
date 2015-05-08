@@ -51,7 +51,7 @@ module logtank {
 			
 			seq = this.checkAllFieldsExists(seq, conditions);
 			seq = this.applyConditionBasedFilter(seq, conditions);
-			seq.limit(100);
+			seq = seq.limit(100);
 			
 			return promise.then(conn => {
 				return seq.run(conn);
@@ -100,7 +100,7 @@ module logtank {
 				this.setPropertyOfStringPath(requiredFields, c.fieldName, true);
 				atleastOneFieldChecked = true;
 			});
-			return seq.withFields(requiredFields);
+			return seq.hasFields(requiredFields);
 		}
 		
 		private applyConditionBasedFilter(seq: rethinkdb.Sequence, conditions: IQueryCondition[]) {

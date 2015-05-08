@@ -35,9 +35,10 @@ module logtank {
 		validateTagsQueryParams(queryId, tags, conditions);
 		RethinkDB.queryByTags(customerId(), tags, conditions).done(data => {
 			data.forEach(item => {
-				item.$_queryId = queryId;
+				item._$queryId = queryId;
 				me.added('logs_by_tags', item.id, item);
 			});
+			me.ready();
 		});
 	});
 	
@@ -46,29 +47,29 @@ module logtank {
 	});
 	
 	function validateTagsQueryParams(queryId: string, tags: string[], conditions: IQueryCondition[]) {
-		check(queryId, Match.String);
+		check(queryId, String);
 		
 		if (tags && tags.length) {
-			tags.forEach(t => check(t, Match.String));
+			tags.forEach(t => check(t, String));
 		} else {
 			throw new Meteor.Error("At least one tag has to be selected.");
 		}
 		
 		if (conditions && conditions.length) {
 			conditions.forEach(c => {
-				check(c.fieldName, Match.String);
+				check(c.fieldName, String);
 				check(c.type, Match.Integer);
 				
 				switch (c.type) {
 					case QueryConditionType.Boolean:
-						check(c.value, Match.Boolean);
+						check(c.value, Boolean);
 						break;
 					case QueryConditionType.Number:
-						check(c.value, Match.Number);
+						check(c.value, Number);
 						break;
 					case QueryConditionType.String:
 					case QueryConditionType.RegExp:
-						check(c.value, Match.String);
+						check(c.value, String);
 						break;
 					default:
 						throw new Meteor.Error("Invalid condition-type selected.");

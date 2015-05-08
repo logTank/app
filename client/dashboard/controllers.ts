@@ -29,12 +29,13 @@ module logtank {
 			currentTag: <string>null,
 			searchText: ''
 		}
-	
 		public conditions: IClientQueryCondition[] = [];
-		
-		public samplelogs;
+		private result: {
+			handle: Meteor.SubscriptionHandle;
+			logs: angular.meteor.AngularMeteorCollection<{}>
+		};
 	
-		constructor(private $meteor: angular.meteor.IMeteorService) {
+		constructor(private $scope: angular.meteor.IScope, private $meteor: angular.meteor.IMeteorService) {
 			$meteor.call<string[]>('listTags').then(tags => {
 				this.tags.available = tags;
 			});
@@ -61,10 +62,18 @@ module logtank {
 			this.conditions.splice(index, 1);
 		}
 		
-		public runQuery() {
+		public runQuery() {	
 			var queryId = Random.id();
-			this.$meteor.subscribe('logs_by_tags', queryId, this.tags.selected, this.conditions).then(subscriptionHandle => {
-				this.samplelogs = this.$meteor.collection(collection);
+			
+			if (this.result) {
+				this.result.handle.stop();
+				this.result.logs.remove();
+			}
+			this.$scope.subscribe('logs_by_tags', queryId, this.tags.selected, this.getTranslatedConditionsForServer()).then(subscriptionHandle => {
+				this.result = { 
+					handle: subscriptionHandle, 
+					logs: this.$meteor.collection(() => collection.find({_$queryId: queryId})) 
+				};
 			}, err => {
 				console.error(err);
 			});
@@ -103,7 +112,7 @@ module logtank {
 	angular.module('logtank')
 		.controller('DashboardController', ['$mdSidenav', '$mdUtil', DashboardController])
 		.controller('LeftDashboardSidebarController', ['$mdSidenav', LeftDashboardSidebarController])
-		.controller('SearchByTagsController', ['$meteor', SearchByTagsController])
+		.controller('SearchByTagsController', ['$scope', '$meteor', SearchByTagsController])
 		.controller('SearchByTimestampsController', [SearchByTimestampsController])
 		.config(['$stateProvider', '$urlRouterProvider', ($stateProvider: angular.ui.IStateProvider, $urlRouterProvider: angular.ui.IUrlRouterProvider) => {
 			$stateProvider.state('dashboard', {

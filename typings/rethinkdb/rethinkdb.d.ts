@@ -259,6 +259,7 @@ declare module rethinkdb {
     map(s2:S, s3:S, s4:S, s5:S, s6:S, s7:S, s8:S, transform:ExpressionFunction<any>):S;
     map(s2:S, s3:S, s4:S, s5:S, s6:S, s7:S, s8:S, s9:S, transform:ExpressionFunction<any>):S;
     withFields(...selectors:any[]):S;
+    hasFields(...selectors:any[]):S;
     concatMap(transform:ExpressionFunction<any>):S;
 
     orderBy(key:string|Sort, ...keys:(string|Sort)[]):S;
