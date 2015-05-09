@@ -33,20 +33,16 @@
           <div flex="5"></div>
         </div>
        
-        
         <div class="tag-input-rows" layout="row" layout-align="space-around center" ng-repeat="c in ctrl.conditions" style="border-radius:4px; background-color:rgba(158, 158, 158, 0.2); margin-bottom:5px;"> 
-  
           <md-input-container md-no-float flex="25">
             <input placeholder="Field Name" ng-model="c.fieldName">
           </md-input-container>
-  
           <md-select placeholder="Type" ng-model="c.rawType" flex="25">
             <md-option value="String">String</md-option>
             <md-option value="Number">Number</md-option>
             <md-option value="Boolean">Boolean</md-option>
             <md-option value="RegExp">RegExp</md-option>
           </md-select>
-  
           <md-input-container md-no-float flex="25">
             <input placeholder="Value" ng-model="c.rawValue">
           </md-input-container>
@@ -54,9 +50,21 @@
             <md-button class="md-fab md-mini" aria-label="Remove a condition" ng-click="ctrl.removeCondition($index)" style="font-size:36px;" flex="5">&#215;</md-button>
           </div>
         </div>
+        <div class="tag-input-rows" layout="row" layout-align="space-around center" style="border-radius:4px; background-color:rgba(158, 158, 158, 0.2); margin-bottom:5px;"> 
+          <md-input-container md-no-float flex="25">
+            <input ng-disabled="true" placeholder="Field Name">
+          </md-input-container>
+          <md-select ng-disabled="true" placeholder="Type" flex="25" ng-model="placeholderTypeSelection">
+          </md-select>
+          <md-input-container md-no-float flex="25">
+            <input ng-disabled="true" placeholder="Value">
+          </md-input-container>
+          <div>
+            <md-button class="md-fab md-mini md-primary" aria-label="Add a new condition" ng-click="ctrl.appendCondition()" style="font-size:36px;" flex="5" title="Add a new condition">&#43;</md-button>
+          </div>        </div>
         <div layout="row" layout-align="space-between center">
-          <div layout="row" layout-align="start center">
-            <md-button class="md-fab md-primary" aria-label="Add a new condition" ng-click="ctrl.appendCondition()" style="font-size:48px;">&#43;</md-button>
+          <div layout="row" layout-align="start center" ng-click="ctrl.appendCondition()">
+            <md-button class="md-fab md-primary" aria-label="Add a new condition" ng-click="ctrl.appendCondition()" stop-click style="font-size:48px;">&#43;</md-button>
             <p style="text-transform:uppercase">Add a new condition</p>
           </div>
           <md-button class="md-raised md-accent" ng-click="ctrl.runQuery()">Display result &#10152;</md-button>
