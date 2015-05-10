@@ -31,15 +31,15 @@ module logtank {
 	
 	Meteor.publish('logs_by_tags', function(queryId: string, tags: string[], conditions: IQueryCondition[]) {
 		var me = <Subscription>this;
-		
 		validateTagsQueryParams(queryId, tags, conditions);
-		RethinkDB.queryByTags(customerId(), tags, conditions).done(data => {
-			data.forEach(item => {
-				item._$queryId = queryId;
-				me.added('logs_by_tags', item.id, item);
-			});
+
+		var feedCancellation:Function = <Function>new RethinkDB(customerId()).queryByTags(tags, conditions, (err, item) => {
+			item._$queryId = queryId;
+			me.added('logs_by_tags', item.id, item);
 			me.ready();
 		});
+		
+		me.onStop(feedCancellation);
 	});
 	
 	Meteor.startup(() => {

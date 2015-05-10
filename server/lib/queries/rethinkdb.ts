@@ -14,7 +14,9 @@ module logtank {
 		private connectionPromise: Promise<rethinkdb.Connection>;
 		private connection: rethinkdb.Connection;
 				
-		constructor(private customerId: string) {} 
+		constructor(private customerId: string) {
+			this.getConnection();
+		} 
 		
 		public static getAllTagsForCustomer(customerId: string): Promise<string[]> {
 			var rethink = new RethinkDB(customerId);
@@ -25,39 +27,28 @@ module logtank {
 			});
 		}
 		
-		public static queryByTags(customerId: string, tags: string[], conditions: IQueryCondition[]) {
+		public static queryByTags(customerId: string, tags: string[], conditions: IQueryCondition[]): Promise<any[]> {
 			var rethink = new RethinkDB(customerId);
-			
-			return rethink.queryByTags(tags, conditions).then(data => {
-				rethink.dispose;
-				return data;
-			});
+			return <Promise<any[]>>rethink.queryByTags(tags, conditions);
 		}
 			
 		public getAllTagsForCustomer(): Promise<string[]> {
-			var promise = this.getConnection();
 			var seq = this.getTable().distinct(this.getTagIndex());
 			
-			return promise.then(conn => {
+			return this.getConnection().then(conn => {
 				return seq.run(conn);
 			}).then(cursor => {
 				return cursor.toArray();
 			});
 		}
 		
-		public queryByTags(tags: string[], conditions: IQueryCondition[]) {
-			var promise = this.getConnection();
+		public queryByTags(tags: string[], conditions: IQueryCondition[], dataFeedCb?: (err, item) => void): Promise<any[]>|Function {
 			var seq = this.getAllInArray(this.getTable(), tags, this.getTagIndex());
 			
-			seq = this.checkAllFieldsExists(seq, conditions);
+			seq = this.checkAllFieldsExist(seq, conditions);
 			seq = this.applyConditionBasedFilter(seq, conditions);
-			seq = seq.limit(100);
 			
-			return promise.then(conn => {
-				return seq.run(conn);
-			}).then(cursor => {
-				return cursor.toArray();
-			});
+			return this.runQueryAndReturnData(seq, dataFeedCb);
 		}
 		
 		public dispose() {
@@ -92,7 +83,7 @@ module logtank {
 			return <rethinkdb.Sequence>table.getAll.apply(table, getAllArgs);
 		}
 		
-		private checkAllFieldsExists(seq: rethinkdb.Sequence, conditions: IQueryCondition[]) {
+		private checkAllFieldsExist(seq: rethinkdb.Sequence, conditions: IQueryCondition[]) {
 			var requiredFields:Object = {};
 			var atleastOneFieldChecked = false;
 			
@@ -109,6 +100,43 @@ module logtank {
 			});
 			return seq;
 		}		
+		
+		private runQueryAndReturnData(seq: rethinkdb.Sequence, dataFeedCb?: (err, item) => void): Promise<any[]>|Function {
+			var cursors: { data?: rethinkdb.Cursor; feed?: rethinkdb.Cursor } = {};
+			
+			var promise = this.getConnection().then(conn => {
+				var queryPromise = seq.limit(100).run(conn);
+				
+				if (dataFeedCb) { this.subscribeToFeed(seq, conn, cursors, dataFeedCb); }
+				return queryPromise;
+			}).then(cursor => {
+				if (dataFeedCb) {
+					cursors.data = cursor;
+					cursor.each(dataFeedCb);
+				} else {
+					return cursor.toArray();
+				}
+			});
+			
+			if (dataFeedCb) {
+				return this.getFeedSubscriptionDisposal(cursors);
+			} else {
+				return promise;
+			}
+		}
+		
+		private subscribeToFeed(seq: rethinkdb.Sequence, conn: rethinkdb.Connection, cursorCache: {feed?: rethinkdb.Cursor}, dataFeedCb: (err, item) => void) {
+			seq.changes().run(conn).then(cursor => {
+				cursorCache.feed = cursor;
+				cursor.each((err, item) => {
+					if (err) {
+						dataFeedCb(err, null);
+					} else if (item.new_val) {
+						dataFeedCb(null, item.new_val);
+					}
+				});
+			});
+		}
 		
 		private translateConditionToFilterExpression(condition: IQueryCondition): rethinkdb.Expression<boolean>|any {
 			var exp = this.getExpressionForStringPath(condition.fieldName);
@@ -146,6 +174,14 @@ module logtank {
 					}
 					baseObject = baseObject[propertyName];
 				}
+			}
+		}
+		
+		private getFeedSubscriptionDisposal(cursors: { data?: rethinkdb.Cursor; feed?: rethinkdb.Cursor }) {
+			return () => {
+				if (cursors.feed) { cursors.feed.close(); }
+				if (cursors.data) { cursors.data.close(); }
+				this.dispose();
 			}
 		}
 
