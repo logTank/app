@@ -107,7 +107,9 @@ module logtank {
 			var promise = this.getConnection().then(conn => {
 				var queryPromise = seq.limit(100).run(conn);
 				
-				if (dataFeedCb) { this.subscribeToFeed(seq, conn, cursors, dataFeedCb); }
+				if (dataFeedCb) { 
+					this.subscribeToFeed(seq, conn, cursors, dataFeedCb); 
+				}
 				return queryPromise;
 			}).then(cursor => {
 				if (dataFeedCb) {
@@ -142,7 +144,7 @@ module logtank {
 			var exp = this.getExpressionForStringPath(condition.fieldName);
 			
 			if (condition.type === QueryConditionType.RegExp) {
-				return (<rethinkdb.ExpressionString>exp).match(<string>condition.value);				
+				return exp.typeOf().eq('STRING').and((<rethinkdb.ExpressionString>exp).match(<string>condition.value));
 			} else {
 				return exp.eq(condition.value);
 			}

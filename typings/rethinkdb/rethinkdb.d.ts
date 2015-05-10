@@ -360,10 +360,10 @@ declare module rethinkdb {
       append(prop:string):Expression<Object>;
       contains(prop:string):Expression<boolean>;
 
-      and(b:boolean):Expression<boolean>;
-      or(b:boolean):Expression<boolean>;
-      eq(v:any):Expression<boolean>;
-      ne(v:any):Expression<boolean>;
+      and(b:boolean|any):Expression<boolean>;
+      or(b:boolean|any):Expression<boolean>;
+      eq(v:T):Expression<boolean>;
+      ne(v:T):Expression<boolean>;
       not():Expression<boolean>;
 
       gt(value:T):Expression<boolean>;
@@ -380,6 +380,7 @@ declare module rethinkdb {
       hasFields(...fields:string[]):Expression<boolean>;
 
       default(value:T):Expression<T>;
+      typeOf():Expression<string>;
   }
   
   interface ExpressionString extends Expression<string> {
@@ -400,7 +401,7 @@ declare module rethinkdb {
      *    - groups: The capture groups defined with parentheses
      * If no match is found, returns null.
      */
-    match(regexp: string): {str: string; start: number; end: number; groups: any[]}
+    match(regexp: string): {str: string; start: number; end: number; groups: any[]}|boolean
     
   }
   
