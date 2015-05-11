@@ -31,8 +31,9 @@ module logtank {
 		}
 		public conditions: IClientQueryCondition[] = [];
 		private result: {
-			handle: Meteor.SubscriptionHandle;
-			logs: angular.meteor.AngularMeteorCollection<{}>
+			handle?: Meteor.SubscriptionHandle;
+			logs?: angular.meteor.AngularMeteorCollection<{}>;
+			serialized?: string;
 		};
 	
 		constructor(private $scope: angular.meteor.IScope, private $meteor: angular.meteor.IMeteorService) {
@@ -40,8 +41,22 @@ module logtank {
 				this.tags.available = tags;
 			});
 			
-//			this.conditions.push({fieldName: 'LoggerLevel', type: QueryConditionType.String, value: 'error'},
-//								{fieldName: 'location.host', type: QueryConditionType.String, value: 'localhost'});
+			$meteor.autorun($scope, () => {
+				var result = $scope.getReactively('ctrl.result.logs');
+				if (!this.result) return;
+				
+				if (result) { 
+					this.result.serialized = JSON.stringify(result,  (key, value) => {
+						if (key === '_$queryId') {
+							return undefined;
+						} else {
+							return value;
+						}
+					}, 2);
+				} else {
+					this.result.serialized = '';
+				}
+			})
 		}
 		
 		public filteredTags() {
@@ -68,6 +83,8 @@ module logtank {
 			if (this.result) {
 				this.result.handle.stop();
 				this.result.logs.remove();
+				this.result.serialized = '';
+				this.result = null;
 			}
 			this.$scope.subscribe('logs_by_tags', queryId, this.tags.selected, this.getTranslatedConditionsForServer()).then(subscriptionHandle => {
 				this.result = { 

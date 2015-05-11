@@ -1,6 +1,6 @@
 /// <reference path="../tsd.d.ts" />
 
-angular.module('logtank', ['angular-meteor', 'ngAnimate', 'ngMaterial', 'ui.router'])
+angular.module('logtank', ['angular-meteor', 'ngAnimate', 'ngMaterial', 'ui.router', 'ui.codemirror'])
 	.config(['$mdThemingProvider', ($mdThemingProvider: angular.material.MDThemingProvider) => {
 		$mdThemingProvider.theme('default')
 			.primaryPalette('lime')

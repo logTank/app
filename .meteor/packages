@@ -12,8 +12,7 @@ angular:angular-material
 fourseven:scss
 angularui:angular-ui-router
 meteorhacks:cluster
-
-
 npm-container
 meteorhacks:npm
 mologie:typescript
+mquandalle:bower

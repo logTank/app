@@ -1,0 +1,32 @@
+{
+	"name": "logtank-app",
+	"version": "0.0.1",
+	"private": true,
+	"authors": [
+		"Peter Grman <peter.grman@gmail.com",
+		"Sigita Grinfelde <sigita.grinfelde@gmail.com"
+	],
+	"dependencies": {
+		"angular-ui-codemirror": "^0.3.0",
+		"codemirror": "^5.2.0"
+	},
+	"ignoredDependencies": [
+		"angular"
+	],
+	"overrides": {
+		"angular-ui-codemirror": {
+			"arch": ["client"]
+		},
+		"codemirror": {
+			"arch": ["client"],
+			"main": [
+				"lib/codemirror.js",
+				"lib/codemirror.css",
+				"mode/javascript/javascript.js",
+				"addon/display/fullscreen.js",
+				"addon/display/fullscreen.css",
+				"addon/fold/brace-fold.js"
+			]
+		}
+	}
+}

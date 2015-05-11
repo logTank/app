@@ -81,7 +81,10 @@
       </div>
     </md-toolbar>
     <md-card-content>
-      <pre>{{ctrl.result.logs | json}}</pre>
+<!--      <pre>{{ctrl.result.logs | json}}</pre>-->
+      <ui-codemirror ng-model="ctrl.result.serialized" ui-codemirror="{mode: {name: 'javascript', json: true}, lineWrapping: true, lineNumbers: true, readOnly: true}">
+<!--      <ui-codemirror ng-model="ctrl.result.serialized">-->
+      </ui-codemirror>
     </md-card-content>
   </md-card>
 </div>
