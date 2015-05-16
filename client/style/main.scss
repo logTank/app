@@ -1,26 +1,27 @@
-.dashboard-content.md-default-theme{
-	background-color:#E0E0E0;
+.dashboard-content.md-default-theme {
+  background-color: #e0e0e0;
 }
 
-.top-toolbar{
-	padding: 10px 0 10px 0;
+.top-toolbar {
+  padding: 10px 0 10px 0;
 }
 
-.top-logo{
-	height:70px;
-	padding-right:10px;
+.top-logo {
+  height: 70px;
+  padding-right: 10px;
 }
 
-a.active{
-	background-color: rgba(158,158,158,0.2);
+a.active {
+  background-color: rgba(158, 158, 158, 0.2);
 }
 
-.tag-input-rows{
-	md-input-container{
-		padding:2px;
-	}
-	md-select{
-		margin-top: 2px;
-  		margin-bottom: 2px;
-	}
+.tag-input-rows {
+  md-input-container {
+    padding: 2px;
+  }
+  
+  md-select {
+    margin-bottom: 2px;
+    margin-top: 2px;
+  }
 }
