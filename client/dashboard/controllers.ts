@@ -37,7 +37,7 @@ module logtank {
             logs?: angular.meteor.AngularMeteorCollection<{}>;
             serialized?: string;
         };
-    	
+
         static $inject = ['$scope', '$meteor'];
         constructor(private $scope: angular.meteor.IScope, private $meteor: angular.meteor.IMeteorService) {
             $meteor.call<string[]>('listTags').then(tags => {
