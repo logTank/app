@@ -11,12 +11,14 @@ module logtank {
     }
 
     class DashboardController extends SidebarEnabledController {
+        static $inject = ['$mdSidenav', '$mdUtil'];
         constructor($mdSidenav: angular.material.MDSidenavService, $mdUtil: any) {
             super($mdSidenav, $mdUtil, leftSidebarId);
         }
     }
 
     class LeftDashboardSidebarController extends SidebarController {
+        static $inject = ['$mdSidenav'];
         constructor($mdSidenav: angular.material.MDSidenavService) {
             super(leftSidebarId, $mdSidenav);
         }
@@ -35,7 +37,8 @@ module logtank {
             logs?: angular.meteor.AngularMeteorCollection<{}>;
             serialized?: string;
         };
-
+    	
+        static $inject = ['$scope', '$meteor'];
         constructor(private $scope: angular.meteor.IScope, private $meteor: angular.meteor.IMeteorService) {
             $meteor.call<string[]>('listTags').then(tags => {
                 this.tags.available = tags;
@@ -128,10 +131,10 @@ module logtank {
     }
 
     angular.module('logtank')
-        .controller('DashboardController', ['$mdSidenav', '$mdUtil', DashboardController])
-        .controller('LeftDashboardSidebarController', ['$mdSidenav', LeftDashboardSidebarController])
-        .controller('SearchByTagsController', ['$scope', '$meteor', SearchByTagsController])
-        .controller('SearchByTimestampsController', [SearchByTimestampsController])
+        .controller('DashboardController', DashboardController)
+        .controller('LeftDashboardSidebarController', LeftDashboardSidebarController)
+        .controller('SearchByTagsController', SearchByTagsController)
+        .controller('SearchByTimestampsController', SearchByTimestampsController)
         .config(['$stateProvider', '$urlRouterProvider',
             ($stateProvider: angular.ui.IStateProvider, $urlRouterProvider: angular.ui.IUrlRouterProvider) => {
                 $stateProvider.state('dashboard', {

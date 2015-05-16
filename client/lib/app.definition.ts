@@ -7,6 +7,8 @@ angular.module('logtank', ['angular-meteor', 'ngAnimate', 'ngMaterial', 'ui.rout
 			.accentPalette('blue-grey', {'default':'500'});
 	}]).config(['$urlRouterProvider', ($urlRouterProvider: angular.ui.IUrlRouterProvider) => {
 		$urlRouterProvider.otherwise('/dashboard');
+	}]).config(['$compileProvider', ($compileProvider: angular.ICompileProvider) => {
+		$compileProvider.debugInfoEnabled(false);
 	}]).directive('stopClick', () => {
 		return {
 			restrict: 'A',
