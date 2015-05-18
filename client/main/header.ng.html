@@ -1,4 +1,4 @@
-<md-toolbar class="md-accent top-toolbar md-whiteframe-z2" layout="row">
+<md-toolbar class="md-accent top-toolbar md-whiteframe-z2 header-view" layout="row" md-scroll-shrink layout-align="start center" layout-padding>
   <div class="md-toolbar-tools">
     <a href="http://www.logtank.com/" target="_blank"><img class="top-logo" src="/images/greenLogo.png" alt="logo"/></a>
     <h3>logTank Dashboard</h3>
@@ -7,5 +7,8 @@
 <!--<md-button class="md-icon-button" aria-label="More">
       <md-icon md-svg-icon="img/icons/more_vert.svg"></md-icon>
     </md-button>-->
+    <div class="navbar-right navbar-text"  ng-show="$root.currentUser">
+      <meteor-include src='loginButtons'></meteor-include>
+    </div>
   </div>
 </md-toolbar>

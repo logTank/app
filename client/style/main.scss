@@ -1,5 +1,7 @@
+$main-gray: #e0e0e0;
+
 .dashboard-content.md-default-theme {
-  background-color: #e0e0e0;
+  background-color: $main-gray;
 }
 
 .top-toolbar {
@@ -23,5 +25,24 @@ a.active {
   md-select {
     margin-bottom: 2px;
     margin-top: 2px;
+  }
+}
+
+//Reset the default log in style. Needs to be changed later on accounts-ui-unstyled with a fully custom style
+
+.login-view{
+  .login-link-text{
+    font-size:3em;
+  }
+}
+#login-buttons a{
+    text-decoration:none;  
+}
+
+//For right alignment
+.header-view{
+  #login-buttons.login-buttons-dropdown-align- #login-dropdown-list {
+    left: auto;
+    right: -1px;
   }
 }

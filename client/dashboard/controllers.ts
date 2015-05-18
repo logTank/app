@@ -152,6 +152,11 @@ module logtank {
                             controller: 'LeftDashboardSidebarController',
                             controllerAs: 'leftNavbar'
                         }
+                    },
+                    resolve: {
+                        "currentUser": ["$meteor", function($meteor){
+                            return $meteor.requireUser();
+                        }]
                     }
                 }).state('dashboard.tags', {
                     url: '/tags',

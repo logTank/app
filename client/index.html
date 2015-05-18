@@ -1,4 +1,8 @@
-<body ng-app="logtank" ng-strict-di layout="column">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <base href="/">
+</head>
+<body ng-app="logtank" ng-strict-di="true" layout="column">
 	<div layout="row" ng-include="'client/main/header.ng.html'"></div>
 	<div layout="row" flex ui-view></div>
 	<div layout="row" ng-include="'client/main/footer.ng.html'"></div>
