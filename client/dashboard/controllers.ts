@@ -2,6 +2,7 @@
 /// <reference path="../lib/tsd.d.ts" />
 
 module logtank {
+    'use strict';
     var collection = new Mongo.Collection<any>('logs_by_tags');
     var leftSidebarId = 'leftNavbar';
 

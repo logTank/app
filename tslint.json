@@ -41,21 +41,14 @@
     "radix": true,
     "semicolon": true,
     "triple-equals": [true, "allow-null-check"],
-    "typedef": [true,
-      "callSignature",
-      "indexSignature",
-      "parameter",
-      "propertySignature",
-      "variableDeclarator"
-    ],
     "typedef-whitespace": [true,
-      ["callSignature", "noSpace"],
-      ["catchClause", "noSpace"],
-      ["indexSignature", "space"]
+        ["callSignature", "noSpace"],
+        ["catchClause", "noSpace"],
+        ["indexSignature", "space"]
     ],
     "use-strict": [true,
-      "check-module",
-      "check-function"
+        "check-module",
+        "check-function"
     ],
     "variable-name": false,
     "whitespace": [true,
