@@ -1,5 +1,5 @@
 <!--Query-->
-<div layout="row" layout-sm="column">
+<div layout="row" layout-sm="column" flex>
   <md-card flex>
     <md-toolbar>
       <div class="md-toolbar-tools">
@@ -8,7 +8,12 @@
     </md-toolbar>
     <md-card-content class="md-padding" layout="column">
   <!--  	<p ng-repeat="t in searchByTags.availableTags">{{t}}</p>--> 
-      <md-content layout-padding layout="column" class="autocomplete">
+      <md-content layout="column" class="autocomplete">
+<!--      Button on top-->
+<!--        <div layout="row" layout-align="space-between center">
+          <h3>Select Tags</h3>
+          <md-button class="md-raised md-accent" ng-click="ctrl.runQuery()">Display result &#10152;</md-button>
+        </div>-->
         <h3>Select Tags</h3>
         <md-chips ng-model="ctrl.tags.selected" md-autocomplete-snap md-require-match>
           <md-autocomplete          
@@ -24,16 +29,16 @@
         </md-chips>
       </md-content>
       
-      <md-content flex layout="column">
-      
+      <md-content layout="column">
         <div layout="row" layout-align="space-between end">
           <h3 flex="25">Field Name</h3>
           <h3 flex="25">Type</h3>
           <h3 flex="25">Value</h3>
           <div flex="5"></div>
         </div>
-       
-        <div class="tag-input-rows" layout="row" layout-align="space-around center" ng-repeat="c in ctrl.conditions" style="border-radius:4px; background-color:rgba(158, 158, 158, 0.2); margin-bottom:5px;"> 
+       </md-content>
+       <md-content flex layout="column">
+        <div class="tag-input-rows" layout="row" layout-align="space-around center" ng-repeat="c in ctrl.conditions"> 
           <md-input-container md-no-float flex="25">
             <input placeholder="Field Name" ng-model="c.fieldName">
           </md-input-container>
@@ -50,7 +55,7 @@
             <md-button class="md-fab md-mini" aria-label="Remove a condition" ng-click="ctrl.removeCondition($index)" style="font-size:36px;" flex="5">&#215;</md-button>
           </div>
         </div>
-        <div class="tag-input-rows" layout="row" layout-align="space-around center" style="border-radius:4px; background-color:rgba(158, 158, 158, 0.2); margin-bottom:5px;"> 
+        <div class="tag-input-rows" id="tag-rows" layout="row" layout-align="space-around center" style="border-radius:4px; background-color:rgba(158, 158, 158, 0.2); margin-bottom:5px;"> 
           <md-input-container md-no-float flex="25">
             <input ng-disabled="true" placeholder="Field Name">
           </md-input-container>
@@ -60,14 +65,17 @@
             <input ng-disabled="true" placeholder="Value">
           </md-input-container>
           <div>
-            <md-button class="md-fab md-mini md-primary" aria-label="Add a new condition" ng-click="ctrl.appendCondition()" style="font-size:36px;" flex="5" title="Add a new condition">&#43;</md-button>
-          </div>        </div>
-        <div layout="row" layout-align="space-between center">
-          <div layout="row" layout-align="start center" ng-click="ctrl.appendCondition()">
-            <md-button class="md-fab md-primary" aria-label="Add a new condition" ng-click="ctrl.appendCondition()" stop-click style="font-size:48px;">&#43;</md-button>
-            <p style="text-transform:uppercase">Add a new condition</p>
-          </div>
-          <md-button class="md-raised md-accent" ng-click="ctrl.runQuery()">Display result &#10152;</md-button>
+            <md-button class="md-fab md-mini md-primary" aria-label="Add a new condition" ng-click="ctrl.appendCondition()" style="font-size:36px;" flex="5" title="Add a new condition">&#43;                    </md-button>
+          </div>        
+        </div>
+        </md-content>
+        <md-content layout="column">
+          <div layout="row" layout-align="space-between center">
+            <div layout="row" layout-align="start center" ng-click="ctrl.appendCondition()">
+              <md-button class="md-fab md-primary" aria-label="Add a new condition" ng-click="ctrl.appendCondition()" stop-click style="font-size:48px;">&#43;</md-button>
+              <p style="text-transform:uppercase">Add a new condition</p>
+            </div>
+            <md-button class="md-raised md-accent" ng-click="ctrl.runQuery()">Display result &#10152;</md-button>
         </div>
       </md-content>
     </md-card-content>
